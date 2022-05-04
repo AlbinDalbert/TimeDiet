@@ -52,6 +52,10 @@ class TaskList {
     }
   }
 
+  bool isEmpty() {
+    return taskList.isEmpty;
+  }
+
   add(Task task) {
     taskList.add(task);
     rawTotalTime += task.getTotalTime;

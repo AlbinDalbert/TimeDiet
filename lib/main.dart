@@ -47,25 +47,48 @@ class MyHomePage extends StatelessWidget {
             },
           ),
         ),
-        body: Container(
-          child: Column(children: [
-            const Progress(),
-            TaskListView(),
-          ]),
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                Color.fromARGB(255, 112, 160, 255),
-                Color.fromARGB(255, 77, 42, 218),
-              ],
-            ),
-          ),
-        ),
+        body: (() {
+          if (taskList.isEmpty()) {
+            return Container(
+              child: Column(children: [
+                const Progress(),
+                Container(
+                    child: const Text('No tasks todo'),
+                    margin: const EdgeInsets.all(120)),
+              ]),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    Color.fromARGB(255, 112, 160, 255),
+                    Color.fromARGB(255, 77, 42, 218),
+                  ],
+                ),
+              ),
+              alignment: Alignment.topCenter,
+            );
+          } else {
+            return Container(
+              child: Column(children: const [
+                Progress(),
+                TaskListView(),
+              ]),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    Color.fromARGB(255, 112, 160, 255),
+                    Color.fromARGB(255, 77, 42, 218),
+                  ],
+                ),
+              ),
+            );
+          }
+        }()),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            //TODO open add task dialog
             //showDialog(context: context, builder: const Text("data"));
 
             showDialog(context: context, builder: (_) => const AddTaskDialog());
@@ -137,10 +160,27 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
             const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                //TODO add task
-                taskList.add(Task(taskNameController.text,
-                    taskDescriptionController.text, _currentMinutes));
-                Navigator.pop(context);
+                if (taskNameController.text.isNotEmpty) {
+                  taskList.add(Task(taskNameController.text,
+                      taskDescriptionController.text, _currentMinutes));
+
+                  Navigator.pop(context);
+                } else {
+                  //TODO show error
+                  AlertDialog(
+                    title: const Text('Error'),
+                    content: const Text('Task name cannot be empty'),
+                    actions: [
+                      ElevatedButton(
+                        child: const Text('OK'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                    elevation: 100,
+                  );
+                }
               },
               child: const Text('Add'),
             )
