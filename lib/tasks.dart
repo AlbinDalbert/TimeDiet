@@ -8,44 +8,64 @@ class Task {
   String name;
   String description;
   int totalTime;
-  int _timeLeft = 0;
-  String status;
-  Task(this.name, this.description, this.totalTime, this.status) {
-    int _timeLeft = totalTime;
+  int _timeLeftSec = 0;
+  Task(this.name, this.description, this.totalTime) {
+    _timeLeftSec = totalTime * 60;
   }
 
   get getName => name;
   get getDescription => description;
   int get getTotalTime => totalTime;
-  get getStatus => status;
+  //int get getTimeLeft => _timeLeft;
+
+  get getTimeString {
+    int hours = _timeLeftSec ~/ 3600;
+    int minutes = _timeLeftSec ~/ 60 % 60;
+    int seconds = _timeLeftSec % 60;
+
+    return '0$hours:' +
+        (minutes < 10
+            ? '0$minutes'
+            : '$minutes' ':' + (seconds < 10 ? '0$seconds' : '$seconds'));
+//    String timeString =
+    //      '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    // return timeString;
+  }
 
   startTask() {
-    _timeLeft = totalTime;
-    status = 'started';
+    _timeLeftSec = totalTime;
     // TODO start the task timer
     // on other thread
   }
 }
 
-class Tasks {
-  List<Task> tasks = [];
+class TaskList {
+  List<Task> taskList = <Task>[];
   int rawTotalTime = 0;
   int rawCompletedTime = 0;
   Tasks() {
     //TODO add tasks from database
 
-    // temp tasks
-    tasks.add(Task("Task 1", "Description 1", 6000, "In Progress"));
-    tasks.add(Task("Task 2", "Description 2", 6000, "In Progress"));
-    tasks.add(Task("Task 3", "Description 3", 6000, "In Progress"));
-
     // calculate raw total time
-    for (var task in tasks) {
+    for (var task in taskList) {
       rawTotalTime += task.getTotalTime;
     }
   }
 
-  get getTasks => tasks;
+  add(Task task) {
+    taskList.add(task);
+    rawTotalTime += task.getTotalTime;
+  }
+
+  Task getTask(int index) {
+    return taskList[index];
+  }
+
+  get getTasks => taskList;
+
+  int getLength() {
+    return taskList.length;
+  }
 }
 
 class Time {
