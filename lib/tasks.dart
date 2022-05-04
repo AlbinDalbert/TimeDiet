@@ -1,60 +1,66 @@
+// ignore_for_file: unnecessary_this
+
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 class Task {
   String name;
   String description;
-  Time startTime;
-  Time timeLeft;
+  int totalTime;
+  int _timeLeft = 0;
   String status;
-  Task(this.name, this.description, this.startTime, this.timeLeft, this.status);
+  Task(this.name, this.description, this.totalTime, this.status) {
+    int _timeLeft = totalTime;
+  }
+
+  get getName => name;
+  get getDescription => description;
+  int get getTotalTime => totalTime;
+  get getStatus => status;
+
+  startTask() {
+    _timeLeft = totalTime;
+    status = 'started';
+    // TODO start the task timer
+    // on other thread
+  }
 }
 
 class Tasks {
   List<Task> tasks = [];
+  int rawTotalTime = 0;
+  int rawCompletedTime = 0;
   Tasks() {
-    tasks.add(Task(
-        'Task 1', 'Description 1', Time(10, 0), Time(10, 0), 'In Progress'));
-    tasks.add(Task(
-        'Task 2', 'Description 2', Time(10, 0), Time(10, 0), 'In Progress'));
-    tasks.add(Task(
-        'Task 3', 'Description 3', Time(10, 0), Time(10, 0), 'In Progress'));
-    tasks.add(Task(
-        'Task 4', 'Description 4', Time(10, 0), Time(10, 0), 'In Progress'));
-    tasks.add(Task(
-        'Task 5', 'Description 5', Time(10, 0), Time(10, 0), 'In Progress'));
-    tasks.add(Task(
-        'Task 6', 'Description 6', Time(10, 0), Time(10, 0), 'In Progress'));
-    tasks.add(Task(
-        'Task 7', 'Description 7', Time(10, 0), Time(10, 0), 'In Progress'));
-    tasks.add(Task(
-        'Task 8', 'Description 8', Time(10, 0), Time(10, 0), 'In Progress'));
-    tasks.add(Task(
-        'Task 9', 'Description 9', Time(10, 0), Time(10, 0), 'In Progress'));
-    tasks.add(Task(
-        'Task 10', 'Description 10', Time(10, 0), Time(10, 0), 'In Progress'));
-    tasks.add(Task(
-        'Task 11', 'Description 11', Time(10, 0), Time(10, 0), 'In Progress'));
-    tasks.add(Task(
-        'Task 12', 'Description 12', Time(10, 0), Time(10, 0), 'In Progress'));
-    tasks.add(Task(
-        'Task 13', 'Description 13', Time(10, 0), Time(10, 0), 'In Progress'));
-    tasks.add(Task(
-        'Task 14', 'Description 14', Time(10, 0), Time(10, 0), 'In Progress'));
-    tasks.add(Task(
-        'Task 15', 'Description 15', Time(10, 0), Time(10, 0), 'In Progress'));
+    //TODO add tasks from database
+
+    // temp tasks
+    tasks.add(Task("Task 1", "Description 1", 6000, "In Progress"));
+    tasks.add(Task("Task 2", "Description 2", 6000, "In Progress"));
+    tasks.add(Task("Task 3", "Description 3", 6000, "In Progress"));
+
+    // calculate raw total time
+    for (var task in tasks) {
+      rawTotalTime += task.getTotalTime;
+    }
   }
+
+  get getTasks => tasks;
 }
 
 class Time {
-  int hours;
   int minutes;
-  Time(this.hours, this.minutes);
+  int seconds;
+  Time(this.minutes, this.seconds);
 
   @override
   String toString() {
-    return '$hours:$minutes';
+    return '$minutes:$seconds';
   }
+
+  int toRaw() {
+    return minutes * 60 + seconds;
+  }
+
+  int get rawTime => (minutes * 60) + this.seconds;
 }

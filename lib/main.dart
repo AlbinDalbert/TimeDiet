@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:flutter/rendering.dart';
+import 'package:todo_list/taskActivity.dart';
 import 'tasks.dart';
 import 'package:flutter/material.dart';
 
@@ -8,19 +10,23 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   //MyApp();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: ThemeData(primarySwatch: Colors.deepPurple),
       title: 'Todo',
-      home: MyHomePage(),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+
   //MyHomePage();
 
   @override
@@ -37,7 +43,7 @@ class MyHomePage extends StatelessWidget {
         ),
         body: Container(
           child: Column(children: [
-            Progress(),
+            const Progress(),
             TaskList(),
           ]),
           decoration: const BoxDecoration(
@@ -133,7 +139,7 @@ class _ProgressState extends State<Progress> {
   //_ProgressState();
   // _progress should be in range [0, 1] and is equal to the number of tasks completed divided by the total number of tasks.
 
-  static const _progress = 0.5;
+  static const _progress = 0.4;
 
   @override
   Widget build(BuildContext context) {
@@ -159,9 +165,18 @@ class _ProgressState extends State<Progress> {
           LinearProgressIndicator(
             value: _progress,
             minHeight: 30,
-            backgroundColor: Colors.grey,
-            color: _barColor,
+            backgroundColor: Colors.white24,
+            valueColor: AlwaysStoppedAnimation<Color>(_barColor),
           ),
+          /*
+          LinearProgressIndicator(
+            value: _progress,
+            minHeight: 30,
+            backgroundColor: Colors.white12,
+            color: _barColor,
+            semanticsLabel: '${(_progress * 100).toInt()}%',
+          ),
+          */
         ],
       ),
     );
@@ -169,17 +184,16 @@ class _ProgressState extends State<Progress> {
 }
 
 class TaskList extends StatelessWidget {
-  const TaskList({Key? key}) : super(key: key);
+  TaskList({Key? key}) : super(key: key);
 
-  get tasks => null;
-
+  final Tasks _tasks = Tasks();
   //TaskList();
   int completed() {
-    var completed = 0;
-    for (var task in tasks) {
+    int completed = 0;
+    for (var task in _tasks.getTasks()) {
       if (task.completed) completed++;
     }
-    return 0;
+    return completed;
   }
 
   @override
@@ -187,6 +201,7 @@ class TaskList extends StatelessWidget {
     return Column(
       children: const [
         // add all tasks in the list here
+        Text('hello'),
         TaskListItem(label: "Task 1"),
         TaskListItem(label: "Task 2"),
         TaskListItem(label: "Task 3"),
