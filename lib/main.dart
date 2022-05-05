@@ -4,36 +4,48 @@ import 'package:flutter/rendering.dart';
 import 'package:todo_list/taskActivity.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'tasks.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
 TaskList taskList = TaskList();
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  //MyApp();
-
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
         fontFamily: 'FiraCode',
       ),
       title: 'Todo',
-      home: const MyHomePage(),
+      home: const HomePage(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
 
-  //MyHomePage();
+  @override
+  State<StatefulWidget> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  updateList() async {
+    print('test');
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +103,12 @@ class MyHomePage extends StatelessWidget {
           onPressed: () {
             //showDialog(context: context, builder: const Text("data"));
 
-            showDialog(context: context, builder: (_) => const AddTaskDialog());
+            showDialog(
+                context: context,
+                builder: (_) => AddTaskDialog(
+                      updateList: updateList,
+                    ));
+            //updateList();
           },
           child: const Icon(Icons.add),
         ));
@@ -99,7 +116,8 @@ class MyHomePage extends StatelessWidget {
 }
 
 class AddTaskDialog extends StatefulWidget {
-  const AddTaskDialog({Key? key}) : super(key: key);
+  final Function updateList;
+  const AddTaskDialog({Key? key, required this.updateList}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _AddTaskDialogState();
@@ -165,21 +183,10 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                       taskDescriptionController.text, _currentMinutes));
 
                   Navigator.pop(context);
+                  widget.updateList();
                 } else {
                   //TODO show error
-                  AlertDialog(
-                    title: const Text('Error'),
-                    content: const Text('Task name cannot be empty'),
-                    actions: [
-                      ElevatedButton(
-                        child: const Text('OK'),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                    elevation: 100,
-                  );
+
                 }
               },
               child: const Text('Add'),
