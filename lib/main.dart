@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/rendering.dart';
@@ -42,14 +44,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  updateList() async {
-    print('test');
-    setState(() {});
+  var progress = taskList.getCompletedPercentage();
+  var length = 0;
+  var completed = 0;
+
+  updateList() {
+    print("refresh");
+
+    setState(() {
+      progress = taskList.getCompletedPercentage();
+      length = taskList.getLength();
+      //key = UniqueKey();
+      //completed = taskList.getCompleted();
+    });
+    print("refresh done");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: UniqueKey(),
         appBar: AppBar(
           title: const Text('Todo'),
           leading: IconButton(
@@ -221,10 +235,13 @@ class _ProgressState extends State<Progress> {
   //_ProgressState();
   // _progress should be in range [0, 1] and is equal to the number of tasks completed divided by the total number of tasks.
 
-  static const _progress = 0.4;
-
   @override
   Widget build(BuildContext context) {
+    double _progress = taskList.getCompletedPercentage();
+
+    if (_progress > 1) {
+      _progress = 1;
+    }
     // TODO make values configurable my user
     /*
     var _barColor = _progress < 0.7
@@ -274,6 +291,7 @@ class TaskListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
         child: ListView.builder(
+      key: UniqueKey(),
       physics: const AlwaysScrollableScrollPhysics(),
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
@@ -282,14 +300,6 @@ class TaskListView extends StatelessWidget {
         //return Text('data');
         return TaskListItem(index: index);
       },
-      /*
-      children: const [
-        // add all tasks in the list here
-        Text('hello'),
-        TaskListItem(label: "Task 1"),
-        TaskListItem(label: "Task 2"),
-        TaskListItem(label: "Task 3"),
-      ],*/
     ));
   }
 }

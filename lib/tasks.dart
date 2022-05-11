@@ -42,7 +42,7 @@ class Task {
 class TaskList {
   List<Task> taskList = <Task>[];
   int rawTotalTime = 0;
-  int rawCompletedTime = 0;
+  int rawCompletedTime = 5;
   Tasks() {
     //TODO add tasks from database
 
@@ -65,11 +65,18 @@ class TaskList {
     return taskList[index];
   }
 
+  // return percentage of completed time
+  getCompletedPercentage() {
+    return rawCompletedTime / rawTotalTime;
+  }
+
   get getTasks => taskList;
 
   int getLength() {
     return taskList.length;
   }
+
+  getTaskLength() {}
 }
 
 class Time {
