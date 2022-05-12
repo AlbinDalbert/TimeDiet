@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       progress = taskList.getCompletedPercentage();
       length = taskList.getLength();
-      //key = UniqueKey();
+
       //completed = taskList.getCompleted();
     });
     print("refresh done");
@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
           if (taskList.isEmpty()) {
             return Container(
               child: Column(children: [
-                const Progress(),
+                //Progress(),
                 Container(
                     child: const Text('No tasks todo'),
                     margin: const EdgeInsets.all(120)),
@@ -97,8 +97,8 @@ class _HomePageState extends State<HomePage> {
             );
           } else {
             return Container(
-              child: Column(children: const [
-                Progress(),
+              child: Column(children: [
+                //Progress(),
                 TaskListView(),
               ]),
               decoration: const BoxDecoration(
@@ -195,7 +195,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
               onPressed: () {
                 if (taskNameController.text.isNotEmpty) {
                   taskList.add(Task(taskNameController.text,
-                      taskDescriptionController.text, _currentMinutes));
+                      taskDescriptionController.text, _currentMinutes, () {}));
 
                   Navigator.pop(context);
                   widget.updateList();
@@ -235,14 +235,20 @@ class Progress extends StatefulWidget {
 class _ProgressState extends State<Progress> {
   //_ProgressState();
   // _progress should be in range [0, 1] and is equal to the number of tasks completed divided by the total number of tasks.
+  double _progress = taskList.getCompletedPercentage();
+  update() {
+    setState(() {
+      _progress = taskList.getCompletedPercentage();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     double _progress = taskList.getCompletedPercentage();
-
+/*
     if (_progress > 1) {
       _progress = 1;
-    }
+    }*/
     // TODO make values configurable my user
     /*
     var _barColor = _progress < 0.7
@@ -258,6 +264,7 @@ class _ProgressState extends State<Progress> {
       _barColor = Colors.white24;
     }
     return Container(
+      key: UniqueKey(),
       margin: const EdgeInsets.all(21),
       child: Column(
         children: [

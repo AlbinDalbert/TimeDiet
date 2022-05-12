@@ -17,9 +17,37 @@ class TaskDetailsView extends StatefulWidget {
 
 class _TaskDetailsView extends State<TaskDetailsView> {
   Task task;
-  _TaskDetailsView(this.task);
+  double taskProgress = 0.0;
+  String strTimeLeft = "00:00:00";
+  String strTimeBeen = "00:00:00";
+  String buttonText = "Start";
+  _TaskDetailsView(this.task) {
+    taskProgress = 1.0 - task.getProgress;
+    strTimeLeft = task.getTimeString;
+    strTimeBeen = task.getTimeStringRun;
+  }
+
+  updateTimer(int timeLeft) {
+    print("refresh");
+    setState(() {
+      //taskProgress = 1.0 - (timeLeft / task.getTotalTime);
+      strTimeLeft = task.getTimeString;
+      strTimeBeen = task.getTimeStringRun;
+      if (task.isRunning) {
+        buttonText = "Stop";
+      } else if (task.getStoredProgress > 0.0) {
+        buttonText = "Resume";
+      }
+      if (timeLeft == 0) {
+        buttonText = "Done";
+      }
+    });
+    print("refresh done");
+  }
+
   @override
   Widget build(BuildContext context) {
+    task.setUpdateTimer(updateTimer);
     return Scaffold(
       key: UniqueKey(),
       appBar: AppBar(
@@ -27,7 +55,9 @@ class _TaskDetailsView extends State<TaskDetailsView> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            //TODO go back to previous screen
+            if (task.isRunning) {
+              task.stopTask();
+            }
             Navigator.pop(context);
           },
         ),
@@ -35,20 +65,43 @@ class _TaskDetailsView extends State<TaskDetailsView> {
       body: Container(
           child: Column(children: [
             Container(
+                key: UniqueKey(),
                 alignment: Alignment.center,
-                margin: EdgeInsets.all(30),
+                margin: const EdgeInsets.all(30),
                 //padding: EdgeInsets.all(20),
                 height: MediaQuery.of(context).size.height * 0.4,
                 child: CircularPercentIndicator(
-                    radius: 160,
-                    progressColor: Colors.indigo,
-                    backgroundColor: Colors.white38,
-                    animation: true,
-                    circularStrokeCap: CircularStrokeCap.round,
-                    center: Text(task.getTimeString,
-                        style: TextStyle(fontSize: 30)),
-                    percent: 0.4,
-                    lineWidth: 30.0),
+                  key: UniqueKey(),
+                  radius: 160,
+                  progressColor: Colors.indigo,
+                  backgroundColor: Colors.white38,
+                  animation: false,
+                  circularStrokeCap: CircularStrokeCap.round,
+                  center: Column(
+                    children: [
+                      Text(strTimeBeen,
+                          style: const TextStyle(
+                              fontSize: 30, color: Colors.black)),
+                      /*
+                      Text(strTimeLeft,
+                          style: const TextStyle(
+                              fontSize: 30, color: Colors.white38)),
+                              */
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  percent: (() {
+                    if (task == null) {
+                      return 0.0;
+                    }
+                    if (task.isRunning) {
+                      return 1.0 - task.getProgress;
+                    } else {
+                      return 1.0 - task.getStoredProgress;
+                    }
+                  }()),
+                  lineWidth: 30.0,
+                ),
                 decoration: const BoxDecoration(
                   border: Border(
                     bottom: BorderSide(color: Colors.black26, width: 8),
@@ -63,15 +116,15 @@ class _TaskDetailsView extends State<TaskDetailsView> {
                 child: Column(
                   children: [
                     Container(
-                        margin: EdgeInsets.all(40),
+                        margin: const EdgeInsets.all(40),
                         child: Text(task.getName,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 30, fontWeight: FontWeight.bold))),
                     Flexible(
                         child: Column(
                       children: [
                         Text(task.getDescription,
-                            style: TextStyle(fontSize: 20)),
+                            style: const TextStyle(fontSize: 20)),
                         Container(
                           child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
@@ -79,12 +132,15 @@ class _TaskDetailsView extends State<TaskDetailsView> {
                                     MediaQuery.of(context).size.width * 0.8,
                                     MediaQuery.of(context).size.height * 0.1),
                               ),
-                              child: Text("Start"),
+                              child: Text(buttonText),
                               onPressed: () {
-                                task.startTask();
-                                setState(() {});
+                                if (task.isRunning) {
+                                  task.stopTask();
+                                } else {
+                                  task.startTask();
+                                }
                               }),
-                          margin: EdgeInsets.all(40),
+                          margin: const EdgeInsets.all(40),
                         )
                       ],
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
