@@ -3,9 +3,9 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/rendering.dart';
-import 'package:todo_list/taskActivity.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'tasks.dart';
+import 'taskDetails.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+        primarySwatch: Colors.indigo,
         fontFamily: 'FiraCode',
       ),
       title: 'Todo',
@@ -88,7 +88,8 @@ class _HomePageState extends State<HomePage> {
                   end: Alignment.bottomLeft,
                   colors: [
                     Color.fromARGB(255, 112, 160, 255),
-                    Color.fromARGB(255, 77, 42, 218),
+                    Colors.indigo
+                    //Color.fromARGB(255, 77, 42, 218),
                   ],
                 ),
               ),
@@ -325,31 +326,42 @@ class _TaskItemState extends State<TaskListItem> {
   Widget build(BuildContext context) {
     Task task = taskList.getTask(index);
     return AnimatedContainer(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Checkbox(
-            onChanged: (newValue) => setState(() {
-              _isChecked = newValue!;
-              _done = !_done;
-            }),
-            value: _isChecked,
+      child: InkWell(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Checkbox(
+                onChanged: (newValue) => setState(() {
+                  _isChecked = newValue!;
+                  _done = !_done;
+                }),
+                value: _isChecked,
+              ),
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(task.name, style: const TextStyle(fontSize: 26)),
+                    Text(task.getTimeString,
+                        style: const TextStyle(fontSize: 21)),
+                  ],
+                ),
+              ),
+              const Icon(Icons.arrow_forward_ios),
+            ],
           ),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(task.name, style: const TextStyle(fontSize: 26)),
-                Text(task.getTimeString, style: const TextStyle(fontSize: 21)),
-              ],
-            ),
-          ),
-          const Icon(Icons.arrow_forward_ios),
-        ],
-      ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TaskDetailsView(task: task),
+              ),
+            );
+          }),
+
       //padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       decoration: BoxDecoration(
         border: const Border(

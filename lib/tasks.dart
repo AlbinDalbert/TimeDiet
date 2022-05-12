@@ -16,7 +16,7 @@ class Task {
   get getName => name;
   get getDescription => description;
   int get getTotalTime => totalTime;
-  //int get getTimeLeft => _timeLeft;
+  int get getTimeLeft => _timeLeftSec;
 
   get getTimeString {
     int hours = _timeLeftSec ~/ 3600;
@@ -36,6 +36,10 @@ class Task {
     _timeLeftSec = totalTime;
     // TODO start the task timer
     // on other thread
+  }
+
+  stopTask() {
+    _timeLeftSec = 0;
   }
 }
 
