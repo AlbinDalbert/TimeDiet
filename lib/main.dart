@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/rendering.dart';
@@ -12,7 +10,7 @@ import 'package:flutter/material.dart';
 TaskList taskList = TaskList();
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -49,15 +47,12 @@ class _HomePageState extends State<HomePage> {
   var completed = 0;
 
   updateList() {
-    print("refresh");
-
     setState(() {
       progress = taskList.getCompletedPercentage();
       length = taskList.getLength();
 
       //completed = taskList.getCompleted();
     });
-    print("refresh done");
   }
 
   @override
@@ -97,7 +92,7 @@ class _HomePageState extends State<HomePage> {
             );
           } else {
             return Container(
-              child: Column(children: [
+              child: Column(children: const [
                 //Progress(),
                 TaskListView(),
               ]),

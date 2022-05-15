@@ -58,13 +58,12 @@ class Task {
 
 class TaskTimer {
   Function _onTick;
-  int _totalTime;
+  final int _totalTime;
   int _timeLeftSec = 0;
   int workingTime = 0;
 
   TaskTimer(this._totalTime, this._onTick) {
     _timeLeftSec = _totalTime;
-    print('total time: $_totalTime');
   }
   bool running = false;
 
@@ -74,12 +73,10 @@ class TaskTimer {
 
   //start timer
   startTimer() {
-    print("time left: $_timeLeftSec");
     workingTime = _timeLeftSec;
-    print('timer started');
+
     running = true;
-    Timer.periodic(Duration(seconds: 1), (Timer t) {
-      print('timer: ${workingTime}');
+    Timer.periodic(const Duration(seconds: 1), (Timer t) {
       if (workingTime > 0) {
         workingTime--;
         _timeLeftSec = workingTime;
@@ -92,7 +89,6 @@ class TaskTimer {
 
   // cancel timer
   stopTimer() {
-    print('timer stopped');
     _timeLeftSec = workingTime;
     workingTime = 0;
     running = false;
@@ -132,8 +128,8 @@ class TaskList {
   List<Task> taskList = <Task>[];
   int rawTotalTime = 0;
   int rawCompletedTime = 0;
-
-  Tasks() {
+/*
+  tasks() {
     //TODO add tasks from database
 
     // calculate raw total time
@@ -141,7 +137,7 @@ class TaskList {
       rawTotalTime += task.getTotalTime;
     }
   }
-
+*/
   bool isEmpty() {
     return taskList.isEmpty;
   }

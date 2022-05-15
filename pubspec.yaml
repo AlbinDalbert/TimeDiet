@@ -32,6 +32,7 @@ dependencies:
 
   numberpicker: ^2.0.1
   percent_indicator: ^4.0.1
+  audioplayers: ^0.20.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -54,6 +55,11 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  assets:
+   - assets/TimerRunningSingle.ogg
+   - assets/TimerRunning1.ogg
+   - assets/TimerRunningSmall.mp3
+   - assets/NoMoreSnooze.mp3
 
   uses-material-design: true
 
