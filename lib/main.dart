@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:developer';
-import 'package:flutter/rendering.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'tasks.dart';
 import 'taskDetails.dart';
@@ -41,6 +38,14 @@ class HomePage extends StatefulWidget {
   State<StatefulWidget> createState() => _HomePageState();
 }
 
+// TODO add tasks from database
+// TODO make multiple types of tasks. time, interval, etc.
+// TODO limit name lenth to 20 characters
+// TODO add animation when completed
+
+// TODO make it possible to add multiple tasks at once. 4 of (25 min, work)
+// TODO remove / give up on task
+// TODO edit tasks (will reset time and cannot be lower more then half of original time)
 class _HomePageState extends State<HomePage> {
   var progress = taskList.getCompletedPercentage();
   var length = 0;

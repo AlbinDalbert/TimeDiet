@@ -1,8 +1,6 @@
 // ignore_for_file: unnecessary_this
 
 import 'dart:async';
-import 'dart:developer';
-import 'package:flutter/material.dart';
 
 class Task {
   String name;

@@ -1,10 +1,6 @@
 import 'dart:async';
-import 'dart:developer';
-import 'package:flutter/rendering.dart';
-import 'package:numberpicker/numberpicker.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'tasks.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 
@@ -64,7 +60,6 @@ class _TaskDetailsView extends State<TaskDetailsView> {
         if (snoozeTimer.isRunning) {
           snoozeTimer.stop();
         }
-        strSnoozeTime = "🔥🔥🔥";
       }
     });
   }
@@ -218,6 +213,7 @@ class _TaskDetailsView extends State<TaskDetailsView> {
   }
 }
 
+// TODO make the snooze time / reminder sound time customizable
 class SnoozeTimer {
   Function _onTick = () {};
   int _timeLeft;
