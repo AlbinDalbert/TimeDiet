@@ -147,12 +147,15 @@ class AddTaskDialog extends StatefulWidget {
 }
 
 class _AddTaskDialogState extends State<AddTaskDialog> {
-  int _currentMinutes = 10;
+  int _currentMinutes = 15;
+  int _numberOfTasks = 1;
 
   @override
   Widget build(BuildContext context) {
     final taskNameController = TextEditingController();
     final taskDescriptionController = TextEditingController();
+    final taskTimeController = TextEditingController();
+    final taskNumberOfTasksController = TextEditingController();
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -162,15 +165,21 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
+            TextFormField(
               maxLength: 16,
               controller: taskNameController,
               decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Name',
                   hintText: 'Enter task name'),
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a name';
+                }
+                return null;
+              },
             ),
-            TextField(
+            TextFormField(
               //onSubmitted: (value) => _name = value,
               controller: taskDescriptionController,
               decoration: const InputDecoration(
@@ -178,39 +187,56 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                   labelText: 'Description',
                   hintText: 'Enter task description'),
             ),
-            NumberPicker(
-              value: _currentMinutes,
-              minValue: 1,
-              step: 1,
-              maxValue: 240,
-              onChanged: (value) => setState(() => _currentMinutes = value),
+            TextFormField(
+              keyboardType: TextInputType.number,
+              controller: taskTimeController,
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Time',
+                  hintText: 'Enter task time minutes'),
+              validator: (String? value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a time';
+                }
+                return null;
+              },
             ),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.black,
-                  width: 0.5,
-                ),
-                borderRadius: BorderRadius.circular(5),
-              ),
-              child: Text('$_currentMinutes min',
-                  style: Theme.of(context).textTheme.headline6),
-              alignment: Alignment.center,
+            TextFormField(
+              keyboardType: TextInputType.number,
+              controller: taskNumberOfTasksController,
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Number of tasks',
+                  hintText: 'Enter number of tasks'),
             ),
             const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
+                if (taskNumberOfTasksController.text == null ||
+                    taskNumberOfTasksController.text.isEmpty) {
+                  taskNumberOfTasksController.text = '1';
+                }
+                _numberOfTasks = int.parse(taskNumberOfTasksController.text);
+                if (taskTimeController.text == null ||
+                    taskTimeController.text.isEmpty) {
+                  taskTimeController.text = '15';
+                }
+                _currentMinutes = int.parse(taskTimeController.text);
                 if (taskNameController.text.isNotEmpty) {
-                  taskList.add(Task(taskNameController.text,
-                      taskDescriptionController.text, _currentMinutes, () {}));
-
+                  for (var i = 0; i < _numberOfTasks; i++) {
+                    taskList.add(Task(
+                        taskNameController.text +
+                            " (" +
+                            (i + 1).toString() +
+                            ("/" + _numberOfTasks.toString() + ")"),
+                        taskDescriptionController.text,
+                        _currentMinutes,
+                        () {}));
+                  }
                   Navigator.pop(context);
                   widget.updateList();
                 } else {
                   //TODO show error
-
                 }
               },
               child: const Text('Add'),
@@ -226,7 +252,9 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
             end: Alignment.bottomRight,
           ),
         ),
-        height: 520,
+        height: 420,
+        //height: MediaQuery.of(context).size.height * 0.5,
+        //width: MediaQuery.of(context).size.width * 1,
       ),
     );
   }
