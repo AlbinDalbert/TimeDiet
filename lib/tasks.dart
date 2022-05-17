@@ -27,7 +27,7 @@ class Task {
   get getName => name;
   get getDescription => description;
   int get getTotalTime => totalTime;
-  int get getTimeLeft => _timeLeftSec;
+  //int get getTimeLeft => _timeLeftSec;
 
   get getProgress => _timer.getLiveProgress;
 
@@ -51,6 +51,10 @@ class Task {
 
   stopTask() {
     _timer.stopTimer();
+  }
+
+  bool isCompleted() {
+    return _timeLeftSec == 0;
   }
 }
 
@@ -79,6 +83,8 @@ class TaskTimer {
         workingTime--;
         _timeLeftSec = workingTime;
       } else {
+        //workingTime--;
+        //_timeLeftSec = workingTime;
         t.cancel();
       }
       _onTick(_timeLeftSec);

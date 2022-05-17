@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:todo_list/lottieAnimations.dart';
 import 'tasks.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -18,6 +19,8 @@ class _TaskDetailsView extends State<TaskDetailsView> {
   String strTimeLeft = "00:00:00";
   String strTimeBeen = "00:00:00";
   String buttonText = "Start";
+  int storedTimeLeft = 1;
+  Color timerProgressColor = Colors.indigo;
 
   SnoozeTimer snoozeTimer = SnoozeTimer(300);
   String strSnoozeTime = "00:00:00";
@@ -32,7 +35,8 @@ class _TaskDetailsView extends State<TaskDetailsView> {
     audioPlayer.load("TimerRunningSmall.mp3");
   }
 
-  updateTimer(int timeLeft) {
+  updateTimer(int timeLeft) async {
+    storedTimeLeft = timeLeft;
     if (task.isRunning) {
       //audioPlayer.play('TimerRunningSmall.mp3');
     }
@@ -51,15 +55,35 @@ class _TaskDetailsView extends State<TaskDetailsView> {
       }
 
       if (snooze) {
+        timerProgressColor = Colors.redAccent;
         if (!snoozeTimer.isRunning) {
           snoozeTimer = SnoozeTimer(0);
           snoozeTimer.start();
         }
         strSnoozeTime = snoozeTimer.getTimeString;
       } else {
+        timerProgressColor = Colors.indigo;
         if (snoozeTimer.isRunning) {
           snoozeTimer.stop();
         }
+      }
+      //print(task.isCompleted());
+      if (task.isCompleted() || timeLeft == 0) {
+        print('object');
+        timerProgressColor = Colors.tealAccent;
+      }
+    });
+  }
+
+  checkStatus() {
+    //print('check status');
+    setState(() {
+      //print(task.isCompleted());
+      if (task.isCompleted()) {
+        timerProgressColor = Colors.tealAccent;
+      }
+      if (snoozeTimer.isRunning) {
+        timerProgressColor = Colors.redAccent;
       }
     });
   }
@@ -68,8 +92,9 @@ class _TaskDetailsView extends State<TaskDetailsView> {
   Widget build(BuildContext context) {
     task.setUpdateTimer(updateTimer);
     snoozeTimer.setUpdateTimer(updateTimer);
+    checkStatus();
     return Scaffold(
-      key: UniqueKey(),
+      //key: UniqueKey(),
       appBar: AppBar(
         title: Text(task.getName),
         leading: IconButton(
@@ -82,49 +107,46 @@ class _TaskDetailsView extends State<TaskDetailsView> {
           },
         ),
       ),
-      body: Container(
-          child: Column(children: [
-            AspectRatio(
-                aspectRatio: 1.0,
-                child: Container(
-                    key: UniqueKey(),
+      body: AnimatedContainer(
+        child: Column(children: [
+          AspectRatio(
+              aspectRatio: 1.0,
+              child: Stack(children: [
+                Container(
+                    alignment: Alignment.center, child: computerWorkFromHome()),
+                Container(
+                    //key: UniqueKey(),
                     alignment: Alignment.center,
                     margin: const EdgeInsets.all(30),
                     //padding: EdgeInsets.all(20),
                     height: MediaQuery.of(context).size.height * 0.4,
                     child: CircularPercentIndicator(
-                      key: UniqueKey(),
+                      //key: UniqueKey(),
                       radius: 140,
-                      progressColor: Colors.indigo,
+                      progressColor: timerProgressColor,
                       backgroundColor: Colors.white38,
-                      animation: false,
                       circularStrokeCap: CircularStrokeCap.round,
                       center: (() {
                         if (snooze) {
                           return Column(children: [
                             Text(strTimeBeen,
                                 style: const TextStyle(
-                                    fontSize: 30, color: Colors.black)),
+                                    fontSize: 30,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold)),
                             Text(strSnoozeTime,
                                 style: const TextStyle(
                                     fontSize: 30,
-                                    color: Color.fromARGB(255, 165, 0, 0)))
-
-                            /*
-                            return Text(strSnoozeTime,
-                                style: const TextStyle(
-                                    fontSize: 30, color: Colors.black));*/
+                                    color: Color.fromARGB(255, 165, 0, 0),
+                                    fontWeight: FontWeight.bold)),
                           ], mainAxisAlignment: MainAxisAlignment.center);
                         } else {
                           return Column(children: [
                             Text(strTimeBeen,
                                 style: const TextStyle(
-                                    fontSize: 30, color: Colors.black)),
-
-                            /*
-                            return Text(strSnoozeTime,
-                                style: const TextStyle(
-                                    fontSize: 30, color: Colors.black));*/
+                                    fontSize: 30,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold)),
                           ], mainAxisAlignment: MainAxisAlignment.center);
                         }
                       })(),
@@ -147,68 +169,100 @@ class _TaskDetailsView extends State<TaskDetailsView> {
                         right: BorderSide(color: Colors.white12, width: 8),
                         top: BorderSide(color: Colors.white24, width: 8),
                       ),
-                    ))),
-            Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 0.4,
-                child: Column(
-                  children: [
-                    Container(
-                        margin: const EdgeInsets.all(40),
-                        child: Text(task.getName,
-                            style: const TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.bold))),
-                    Flexible(
-                        child: Column(
-                      children: [
-                        Text(task.getDescription,
-                            style: const TextStyle(fontSize: 20)),
-                        Container(
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                fixedSize: Size(
-                                    MediaQuery.of(context).size.width * 0.8,
-                                    MediaQuery.of(context).size.height * 0.1),
-                              ),
-                              child: Text(buttonText),
-                              onPressed: () {
-                                if (task.isRunning) {
-                                  snooze = true;
-                                  task.stopTask();
-                                } else {
-                                  snooze = false;
-                                  task.startTask();
-                                }
-                              }),
-                          margin: const EdgeInsets.all(40),
-                        )
-                      ],
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                     )),
-                  ],
-                ),
-                decoration: const BoxDecoration(
-                    //color: Color.fromARGB(255, 157, 175, 212),
-                    color: Colors.white38,
-                    border: Border(
-                        //bottom: BorderSide(color: Colors.black26, width: 8),
-                        //left: BorderSide(color: Colors.black12, width: 8),
-                        //right: BorderSide(color: Colors.white12, width: 8),
-                        //top: BorderSide(color: Colors.white, width: 8),
-                        ),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(50),
-                      topRight: Radius.circular(50),
-                    ))),
-          ], mainAxisAlignment: MainAxisAlignment.spaceBetween),
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [Color.fromARGB(255, 112, 160, 255), Colors.indigo],
-            ),
+              ])),
+          Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.4,
+              child: Column(
+                children: [
+                  Container(
+                      margin: const EdgeInsets.all(40),
+                      child: Text(task.getName,
+                          style: const TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold))),
+                  Flexible(
+                      child: Column(
+                    children: [
+                      Text(task.getDescription,
+                          style: const TextStyle(fontSize: 20)),
+                      Container(
+                          child: Row(
+                            children: [
+                              ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    fixedSize: Size(
+                                        MediaQuery.of(context).size.width * 0.6,
+                                        MediaQuery.of(context).size.height *
+                                            0.06),
+                                  ),
+                                  child: Text(buttonText,
+                                      style: const TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold)),
+                                  onPressed: () {
+                                    if (task.isRunning) {
+                                      snooze = true;
+                                      task.stopTask();
+                                    } else {
+                                      snooze = false;
+                                      task.startTask();
+                                    }
+                                  })
+                            ],
+                            mainAxisAlignment: MainAxisAlignment.center,
+                          ),
+                          margin: const EdgeInsets.all(40)),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  )),
+                ],
+              ),
+              decoration: const BoxDecoration(
+                  //color: Color.fromARGB(255, 157, 175, 212),
+                  color: Colors.white38,
+                  border: Border(
+                      //bottom: BorderSide(color: Colors.black26, width: 8),
+                      //left: BorderSide(color: Colors.black12, width: 8),
+                      //right: BorderSide(color: Colors.white12, width: 8),
+                      //top: BorderSide(color: Colors.white, width: 8),
+                      ),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(50),
+                    topRight: Radius.circular(50),
+                  ))),
+        ], mainAxisAlignment: MainAxisAlignment.spaceBetween),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [Color.fromARGB(255, 112, 160, 255), Colors.indigo],
           ),
-          alignment: Alignment.center),
+        ),
+        alignment: Alignment.center,
+        duration: Duration(milliseconds: 500),
+      ),
+      /*
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (_) => Positioned(
+                child: Lottie.asset(
+              'assets/confetti.json',
+              repeat: false,
+              reverse: false,
+              animate: true,
+              width: MediaQuery.of(context).size.width * 2,
+              height: MediaQuery.of(context).size.height * 2,
+            )),
+          );
+        },
+        child: Icon(Icons.warning),
+        mini: true,
+      ),*/
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterFloat,
     );
   }
 }
@@ -231,6 +285,7 @@ class SnoozeTimer {
       // every 5 min (300 sec) play a sound to remind the user
       if (_timeLeft % 300 == 0 && _timeLeft != 0) {
         audioPlayer.play('NoMoreSnooze.mp3');
+        audioPlayer.clearAll();
       }
       if (!_isRunning) {
         t.cancel();
@@ -261,3 +316,8 @@ class SnoozeTimer {
     return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 }
+/*
+void pepTalk() {
+  dynamic pepTalkList = [((){AssetBundle()}())];
+}
+*/

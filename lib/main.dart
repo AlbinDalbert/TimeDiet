@@ -3,6 +3,7 @@ import 'tasks.dart';
 import 'taskDetails.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 TaskList taskList = TaskList();
 
@@ -81,6 +82,13 @@ class _HomePageState extends State<HomePage> {
                 Container(
                     child: const Text('No tasks todo'),
                     margin: const EdgeInsets.all(120)),
+                Lottie.asset(
+                  'assets/wave-loop.json',
+                  repeat: true,
+                  reverse: false,
+                  animate: true,
+                  frameRate: FrameRate(60),
+                ),
               ]),
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -155,6 +163,7 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
         child: Column(
           children: [
             TextField(
+              maxLength: 16,
               controller: taskNameController,
               decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -171,8 +180,8 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
             ),
             NumberPicker(
               value: _currentMinutes,
-              minValue: 5,
-              step: 5,
+              minValue: 1,
+              step: 1,
               maxValue: 240,
               onChanged: (value) => setState(() => _currentMinutes = value),
             ),
