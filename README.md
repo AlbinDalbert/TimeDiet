@@ -1,2 +1,17 @@
 # todo_list
  A Simple todo list app build with Flutter
+
+ ## Roadmap
+ ### Todo list
+    * [x] Create todo list item
+    * [x] Create a todo list
+    * [x] Create detailed view of todo list item
+    * [x] Create a timer for todo list item
+    * [ ] Store todo list items in a database
+    * [ ] Make it possible to remove/give up todo list items
+    * [ ] Store completed todo list items from each day in a database (history)
+    * [ ] Add panic pep talk button
+  ### Structure and UI
+    * [ ] Create a hamburger menu
+    * [ ] Add note taking feature
+    * [ ] Make multiple color themes and load them from a database
