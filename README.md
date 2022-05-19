@@ -15,3 +15,7 @@
     * [ ] Create a hamburger menu
     * [ ] Add note taking feature
     * [ ] Make multiple color themes and load them from a database
+  ### Performance
+    * [ ] Find a good backend solution
+    * [ ] Run timer on the backend
+    * [ ] Golang backend?
