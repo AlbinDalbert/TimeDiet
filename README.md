@@ -1,4 +1,4 @@
-# todo_list
+# TimeDiet
  A Simple todo list app build with Flutter
 
  ## Roadmap
