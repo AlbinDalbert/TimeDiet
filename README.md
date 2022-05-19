@@ -18,4 +18,4 @@
   ### Performance
     * [ ] Find a good backend solution
     * [ ] Run timer on the backend
-    * [ ] Golang backend?
+    * [ ] Golang, Firebase backend?
