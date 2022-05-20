@@ -1,123 +1,104 @@
 import 'package:numberpicker/numberpicker.dart';
-import 'package:todo_list/settingsView.dart';
-import 'WorkList/tasks.dart';
-import 'WorkList/taskDetails.dart';
+import 'tasks.dart';
+import 'taskDetails.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'WorkList/workList.dart';
-import 'drawer.dart';
-import 'mainPage.dart';
+//import 'drawer.dart';
 
 TaskList taskList = TaskList();
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class WorkList extends StatefulWidget {
+  const WorkList({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-
-    return MaterialApp(
-      theme: ThemeData(
-        primarySwatch: Colors.indigo,
-        fontFamily: 'FiraCode',
-      ),
-      title: 'Todo',
-      home: const HomePage(),
-    );
-  }
+  State<StatefulWidget> createState() => _WorkList();
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class _WorkList extends State<WorkList> {
+  var progress = taskList.getCompletedPercentage();
+  var length = 0;
+  var completed = 0;
+  //late NavDrawer navDrawer;
 
-  @override
-  State<StatefulWidget> createState() => _HomePageState();
-}
-
-// TODO add tasks from database
-// TODO make multiple types of tasks. time, interval, etc.
-// TODO limit name lenth to 20 characters
-// TODO add animation when completed
-
-// TODO remove / give up on task
-// TODO edit tasks (will reset time and cannot be lower more then half of original time)
-class _HomePageState extends State<HomePage> {
-  late NavDrawer navDrawer;
-  var _selectedIndex = 1;
-
-  var _pages = [WorkList(), MainPage(), SettingsView()];
-
-  @override
-  Widget build(BuildContext context) {
-    navDrawer = NavDrawer(context);
-    return Scaffold(
-      //key: UniqueKey(),
-      appBar: AppBar(
-        title: const Text('TimeDiet'),
-      ),
-      body: IndexedStack(index: _selectedIndex, children: _pages),
-      drawer: navDrawer.drawer,
-      bottomNavigationBar: BottomNavigationBar(
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'Work List',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTap,
-      ),
-    );
-  }
-
-  _onItemTap(int index) {
+  updateList() {
     setState(() {
-      if (_selectedIndex == index) {
-        return;
-      } /*
-      if (index == 0) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const WorkList()),
-        );
-      } else if (index == 1) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
-      } else if (index == 2) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SettingsView()),
-        );
-      }*/
-      _selectedIndex = index;
+      progress = taskList.getCompletedPercentage();
+      length = taskList.getLength();
+
+      //completed = taskList.getCompleted();
     });
   }
+
+  @override
+  Widget build(BuildContext context) {
+    //navDrawer = NavDrawer(context);
+    return Scaffold(
+      key: UniqueKey(),
+      appBar: null,
+      body: (() {
+        if (taskList.isEmpty()) {
+          return Container(
+            child: Column(children: [
+              //Progress(),
+              Container(
+                  child: const Text('No tasks todo'),
+                  margin: const EdgeInsets.all(120)),
+              Lottie.asset(
+                'assets/wave-loop.json',
+                repeat: true,
+                reverse: false,
+                animate: true,
+                frameRate: FrameRate(60),
+              ),
+            ]),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [
+                  Color.fromARGB(255, 112, 160, 255),
+                  Colors.indigo
+                  //Color.fromARGB(255, 77, 42, 218),
+                ],
+              ),
+            ),
+            alignment: Alignment.topCenter,
+          );
+        } else {
+          return Container(
+            child: Column(children: const [
+              //Progress(),
+              TaskListView(),
+            ]),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [Color.fromARGB(255, 112, 160, 255), Colors.indigo],
+              ),
+            ),
+          );
+        }
+      }()),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          //showDialog(context: context, builder: const Text("data"));
+
+          showDialog(
+              context: context,
+              builder: (_) => AddTaskDialog(
+                    updateList: updateList,
+                  ));
+          //updateList();
+        },
+        child: const Icon(Icons.add),
+      ),
+      //drawer: navDrawer.drawer,
+    );
+  }
 }
 
-/*
 class AddTaskDialog extends StatefulWidget {
   final Function updateList;
   const AddTaskDialog({Key? key, required this.updateList}) : super(key: key);
@@ -408,4 +389,3 @@ class _TaskItemState extends State<TaskListItem> {
     );
   }
 }
-*/

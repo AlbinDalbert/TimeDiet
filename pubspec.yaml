@@ -64,6 +64,7 @@ flutter:
    - assets/wave-loop.json
    - assets/wave-medium.json
    - assets/confetti.json
+   - assets/work-from-home.json
    - assets/yoga.json
 
   uses-material-design: true
