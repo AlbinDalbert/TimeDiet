@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'background.dart';
 //import 'main.dart';
 
 class SettingsView extends StatelessWidget {
@@ -6,15 +7,8 @@ class SettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: null,
-      body: Container(
-        child: Center(child: Text('Settings')),
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [Color.fromARGB(255, 112, 160, 255), Colors.indigo],
-          ),
-        ),
+      body: Stack(
+        children: [mainBackground(), const Center(child: Text('Settings'))],
       ),
     );
   }

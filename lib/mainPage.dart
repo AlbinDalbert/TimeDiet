@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'WorkList/workList.dart';
 import 'drawer.dart';
+import 'background.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -16,20 +17,13 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: const Center(
-        child: Text('TimeDiet'),
-      ),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [
-            Color.fromARGB(255, 112, 160, 255),
-            Colors.indigo,
-          ],
+    return Stack(children: [
+      mainBackground(),
+      Container(
+        child: const Center(
+          child: Text('TimeDiet'),
         ),
-      ),
-    );
+      )
+    ]);
   }
 }

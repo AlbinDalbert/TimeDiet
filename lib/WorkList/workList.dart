@@ -4,6 +4,7 @@ import 'taskDetails.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:todo_list/background.dart';
 //import 'drawer.dart';
 
 TaskList taskList = TaskList();
@@ -38,63 +39,30 @@ class _WorkList extends State<WorkList> {
       appBar: null,
       body: (() {
         if (taskList.isEmpty()) {
-          return Container(
-            child: Column(children: [
-              //Progress(),
-              Container(
-                  child: const Text('No tasks todo'),
-                  margin: const EdgeInsets.all(120)),
-              Lottie.asset(
-                'assets/wave-loop.json',
-                repeat: true,
-                reverse: false,
-                animate: true,
-                frameRate: FrameRate(60),
-              ),
-            ]),
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                colors: [
-                  Color.fromARGB(255, 112, 160, 255),
-                  Colors.indigo
-                  //Color.fromARGB(255, 77, 42, 218),
-                ],
-              ),
-            ),
-            alignment: Alignment.topCenter,
-          );
+          return Stack(children: [
+            mainBackground(),
+            const Center(
+              child: Text('No tasks todo'),
+            )
+          ]);
         } else {
-          return Container(
-            child: Column(children: const [
-              //Progress(),
-              TaskListView(),
-            ]),
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                colors: [Color.fromARGB(255, 112, 160, 255), Colors.indigo],
-              ),
-            ),
-          );
+          return Stack(children: [
+            mainBackground(),
+            //Progress(),
+            TaskListView(),
+          ]);
         }
       }()),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          //showDialog(context: context, builder: const Text("data"));
-
           showDialog(
               context: context,
               builder: (_) => AddTaskDialog(
                     updateList: updateList,
                   ));
-          //updateList();
         },
         child: const Icon(Icons.add),
       ),
-      //drawer: navDrawer.drawer,
     );
   }
 }
