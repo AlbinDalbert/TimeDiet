@@ -155,6 +155,11 @@ class TaskList {
     return taskList[index];
   }
 
+  remove(int index) {
+    rawTotalTime -= taskList[index].getTotalTime;
+    taskList.removeAt(index);
+  }
+
   // return percentage of completed time
   getCompletedPercentage() {
     if (rawTotalTime == 0) {

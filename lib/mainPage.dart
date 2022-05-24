@@ -19,10 +19,15 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Stack(children: [
       mainBackground(),
-      Container(
-        child: const Center(
-          child: Text('TimeDiet'),
-        ),
+      Column(
+        children: [
+          Container(
+              child: const Center(
+                  child: Text('TimEDieT',
+                      style: TextStyle(
+                          fontSize: 40, fontWeight: FontWeight.bold))),
+              margin: const EdgeInsets.only(top: 50)),
+        ],
       )
     ]);
   }
