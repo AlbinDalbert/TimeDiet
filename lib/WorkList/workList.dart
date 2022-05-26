@@ -49,7 +49,7 @@ class _WorkList extends State<WorkList> {
           return Stack(children: [
             mainBackground(),
             //Progress(),
-            TaskListView(),
+            TaskListView(updateList: updateList),
           ]);
         }
       }()),
@@ -256,8 +256,8 @@ class _ProgressState extends State<Progress> {
 }
 
 class TaskListView extends StatelessWidget {
-  const TaskListView({Key? key}) : super(key: key);
-
+  const TaskListView({Key? key, required this.updateList}) : super(key: key);
+  final Function updateList;
   //final TaskList _tasks = TaskList();
   //TaskList();
 
@@ -272,7 +272,7 @@ class TaskListView extends StatelessWidget {
       itemCount: taskList.getLength(),
       itemBuilder: (context, index) {
         //return Text('data');
-        return TaskListItem(index: index);
+        return TaskListItem(index: index, updateList: updateList);
       },
     ));
   }
@@ -281,10 +281,12 @@ class TaskListView extends StatelessWidget {
 class TaskListItem extends StatefulWidget {
   //final String label;
   final int index;
-  const TaskListItem({Key? key, required this.index}) : super(key: key);
+  final Function updateList;
+  const TaskListItem({Key? key, required this.index, required this.updateList})
+      : super(key: key);
 
   @override
-  _TaskItemState createState() => _TaskItemState(index);
+  _TaskItemState createState() => _TaskItemState(index, updateList);
 }
 
 class _TaskItemState extends State<TaskListItem> {
@@ -292,13 +294,15 @@ class _TaskItemState extends State<TaskListItem> {
   bool _done = false;
 
   int index;
+  Function updateList;
 
-  _TaskItemState(this.index);
+  _TaskItemState(this.index, this.updateList);
 
   @override
   Widget build(BuildContext context) {
     Task task = taskList.getTask(index);
     return AnimatedContainer(
+      key: UniqueKey(),
       child: InkWell(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -330,7 +334,11 @@ class _TaskItemState extends State<TaskListItem> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => TaskDetailsView(task: task),
+                builder: (context) => TaskDetailsView(
+                  task: task,
+                  taskList: taskList,
+                  updateList: updateList,
+                ),
               ),
             );
           }),

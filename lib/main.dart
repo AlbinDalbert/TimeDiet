@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     navDrawer = NavDrawer(context);
     return Scaffold(
-      //key: UniqueKey(),
+      key: UniqueKey(),
       appBar: AppBar(
         title: const Text('TimeDiet'),
       ),
@@ -81,8 +81,8 @@ class _HomePageState extends State<HomePage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notes_sharp),
-            label: 'Notes',
+            icon: Icon(Icons.settings),
+            label: 'Settings',
           ),
         ],
         currentIndex: _selectedIndex,

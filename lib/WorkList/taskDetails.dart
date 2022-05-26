@@ -7,14 +7,25 @@ import 'package:audioplayers/audioplayers.dart';
 
 class TaskDetailsView extends StatefulWidget {
   final Task task;
-  const TaskDetailsView({Key? key, required this.task}) : super(key: key);
+  final TaskList taskList;
+  final Function updateList;
+
+  const TaskDetailsView(
+      {Key? key,
+      required this.task,
+      required this.taskList,
+      required this.updateList})
+      : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _TaskDetailsView(task);
+  State<StatefulWidget> createState() =>
+      _TaskDetailsView(task, taskList, updateList);
 }
 
 class _TaskDetailsView extends State<TaskDetailsView> {
   Task task;
+  TaskList taskList;
+  Function updateList;
   double taskProgress = 0.0;
   String strTimeLeft = "00:00:00";
   String strTimeBeen = "00:00:00";
@@ -28,7 +39,7 @@ class _TaskDetailsView extends State<TaskDetailsView> {
 
   final audioPlayer = AudioCache();
 
-  _TaskDetailsView(this.task) {
+  _TaskDetailsView(this.task, this.taskList, this.updateList) {
     taskProgress = 1.0 - task.getProgress;
     strTimeLeft = task.getTimeString;
     strTimeBeen = task.getTimeStringRun;
@@ -88,6 +99,12 @@ class _TaskDetailsView extends State<TaskDetailsView> {
     });
   }
 
+  onDelete() {
+    taskList.removeTask(task);
+    Navigator.pop(context);
+    updateList();
+  }
+
   @override
   Widget build(BuildContext context) {
     task.setUpdateTimer(updateTimer);
@@ -106,6 +123,38 @@ class _TaskDetailsView extends State<TaskDetailsView> {
             Navigator.pop(context);
           },
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              bool delete = false;
+              showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                        title: Text('Give up?'),
+                        content:
+                            Text('Are you sure you want to give up this task?'),
+                        actions: [
+                          TextButton(
+                            child: Text('Yes'),
+                            onPressed: () {
+                              delete = true;
+                              taskList.removeTask(task);
+                              Navigator.pop(context);
+                              onDelete();
+                            },
+                          ),
+                          TextButton(
+                            child: Text('No'),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      ));
+            },
+          ),
+        ],
       ),
       body: AnimatedContainer(
         child: Column(children: [
@@ -115,13 +164,10 @@ class _TaskDetailsView extends State<TaskDetailsView> {
                 Container(
                     alignment: Alignment.center, child: computerWorkFromHome()),
                 Container(
-                    //key: UniqueKey(),
                     alignment: Alignment.center,
                     margin: const EdgeInsets.all(30),
-                    //padding: EdgeInsets.all(20),
                     height: MediaQuery.of(context).size.height * 0.4,
                     child: CircularPercentIndicator(
-                      //key: UniqueKey(),
                       radius: 140,
                       progressColor: timerProgressColor,
                       backgroundColor: Colors.white38,
@@ -242,25 +288,6 @@ class _TaskDetailsView extends State<TaskDetailsView> {
         alignment: Alignment.center,
         duration: Duration(milliseconds: 500),
       ),
-      /*
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (_) => Positioned(
-                child: Lottie.asset(
-              'assets/confetti.json',
-              repeat: false,
-              reverse: false,
-              animate: true,
-              width: MediaQuery.of(context).size.width * 2,
-              height: MediaQuery.of(context).size.height * 2,
-            )),
-          );
-        },
-        child: Icon(Icons.warning),
-        mini: true,
-      ),*/
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterFloat,
     );

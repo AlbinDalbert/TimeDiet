@@ -160,6 +160,11 @@ class TaskList {
     taskList.removeAt(index);
   }
 
+  removeTask(Task task) {
+    rawTotalTime -= task.getTotalTime;
+    taskList.remove(task);
+  }
+
   // return percentage of completed time
   getCompletedPercentage() {
     if (rawTotalTime == 0) {
