@@ -1,10 +1,10 @@
-import 'package:numberpicker/numberpicker.dart';
-import 'package:todo_list/settingsView.dart';
+//import 'package:numberpicker/numberpicker.dart';
+import 'package:time_control/settingsView.dart';
 import 'WorkList/tasks.dart';
-import 'WorkList/taskDetails.dart';
+//import 'WorkList/taskDetails.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
+//import 'package:lottie/lottie.dart';
 import 'WorkList/workList.dart';
 import 'drawer.dart';
 import 'mainPage.dart';

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:todo_list/lottieAnimations.dart';
+import 'package:time_control/lottieAnimations.dart';
 import 'tasks.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';

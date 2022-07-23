@@ -1,8 +1,8 @@
-import 'dart:async';
-import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'WorkList/tasks.dart';
+//import 'dart:async';
+//import 'package:percent_indicator/circular_percent_indicator.dart';
+//import 'WorkList/tasks.dart';
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
+//import 'package:audioplayers/audioplayers.dart';
 import 'package:lottie/lottie.dart';
 
 class computerWorkFromHome extends StatelessWidget {

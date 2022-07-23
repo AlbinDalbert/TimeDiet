@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'WorkList/workList.dart';
-import 'main.dart';
+//import 'main.dart';
 import 'settingsView.dart';
 
 class NavDrawer {
