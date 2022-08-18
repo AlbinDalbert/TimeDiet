@@ -24,8 +24,8 @@ class _WorkList extends State<WorkList> {
 
   updateList() {
     setState(() {
-      progress = taskList.getCompletedPercentage();
-      length = taskList.getLength();
+      //progress = taskList.getCompletedPercentage();
+      //length = taskList.getLength();
 
       //completed = taskList.getCompleted();
     });

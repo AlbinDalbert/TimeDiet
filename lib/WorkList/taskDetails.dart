@@ -57,7 +57,7 @@ class _TaskDetailsView extends State<TaskDetailsView> {
       strTimeLeft = task.getTimeString;
       strTimeBeen = task.getTimeStringRun;
       if (task.isRunning) {
-        buttonText = "Snooze";
+        buttonText = "Pause";
       } else if (task.getStoredProgress > 0.0) {
         buttonText = "Resume";
       }
@@ -197,9 +197,6 @@ class _TaskDetailsView extends State<TaskDetailsView> {
                         }
                       })(),
                       percent: (() {
-                        if (task == null) {
-                          return 0.0;
-                        }
                         if (task.isRunning) {
                           return 1.0 - task.getProgress;
                         } else {
@@ -294,15 +291,14 @@ class _TaskDetailsView extends State<TaskDetailsView> {
   }
 }
 
-// TODO make the snooze time / reminder sound time customizable
 class SnoozeTimer {
   Function _onTick = () {};
   int _timeLeft;
 
   bool _isRunning = false;
-  final audioPlayer = AudioCache();
+  //final audioPlayer = AudioCache();
   SnoozeTimer(this._timeLeft) {
-    audioPlayer.load('NoMoreSnooze.mp3');
+//    audioPlayer.load('NoMoreSnooze.mp3');
   }
 
   start() {
@@ -310,10 +306,10 @@ class SnoozeTimer {
     Timer.periodic(const Duration(seconds: 1), (Timer t) {
       _timeLeft++;
       // every 5 min (300 sec) play a sound to remind the user
-      if (_timeLeft % 300 == 0 && _timeLeft != 0) {
-        audioPlayer.play('NoMoreSnooze.mp3');
-        audioPlayer.clearAll();
-      }
+      //if (_timeLeft % 300 == 0 && _timeLeft != 0) {
+      //      audioPlayer.play('NoMoreSnooze.mp3');
+      //    audioPlayer.clearAll();
+      //}
       if (!_isRunning) {
         t.cancel();
       }
